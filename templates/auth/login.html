@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="glass-card animate-in">
+            <h2 class="text-center mb-4"><i class="fas fa-lock me-2"></i>Login</h2>
+            <form action="/login" method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email Address</label>
+                    <input type="email" name="email" class="form-control form-glass" required
+                        placeholder="name@example.com">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Password</label>
+                    <input type="password" name="password" class="form-control form-glass" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary-glass btn-lg">Sign In</button>
+                </div>
+            </form>
+            <div class="text-center mt-3">
+                <p>New here? <a href="/register" class="fw-bold text-dark">Create Account</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

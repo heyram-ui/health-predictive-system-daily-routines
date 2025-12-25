@@ -1,0 +1,30 @@
+# Core
+Flask==2.3.3
+Flask-SQLAlchemy==3.0.5
+Flask-Login==0.6.2
+Flask-Migrate==4.0.5
+Flask-SocketIO==5.3.4
+python-dotenv==1.0.0
+Werkzeug==2.3.7
+
+# Database
+SQLAlchemy==2.0.19
+alembic==1.12.0
+
+# ML & Data Science
+scikit-learn==1.3.0
+pandas==2.0.3
+numpy==1.24.3
+joblib==1.3.2
+
+# Visualization & Reporting
+plotly==5.17.0
+reportlab==4.0.4
+chart.js==0.1.0
+
+# Real-time & WebSockets
+python-socketio==5.9.0
+eventlet==0.33.3
+
+# Development
+python-dotenv==1.0.0

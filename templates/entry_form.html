@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Add Daily Entry</title>
+  <link href="https://cdn.jsdelivr.net/npm/bulma@0.9.5/css/bulma.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<section class="section">
+  <div class="container">
+    <h1 class="title">Add Daily Routine Entry</h1>
+    <form method="POST" action="{{ url_for('add_entry') }}">
+      <div class="field">
+        <label class="label">Date</label>
+        <input class="input" type="date" name="date" value="{{ date or '' }}">
+      </div>
+      <div class="field">
+        <label class="label">Sleep Hours</label>
+        <input class="input" type="number" step="0.1" name="sleep_hours" required>
+      </div>
+      <div class="field">
+        <label class="label">Steps</label>
+        <input class="input" type="number" name="steps" required>
+      </div>
+      <div class="field">
+        <label class="label">Water (liters)</label>
+        <input class="input" type="number" step="0.1" name="water_l" required>
+      </div>
+      <div class="field">
+        <label class="label">Activity Minutes</label>
+        <input class="input" type="number" name="activity_minutes" required>
+      </div>
+      <div class="field">
+        <label class="label">Stress Level (1-10)</label>
+        <input class="input" type="number" name="stress_level" min="1" max="10" required>
+      </div>
+      <div class="field">
+        <label class="label">Screen Hours</label>
+        <input class="input" type="number" step="0.1" name="screen_hours" required>
+      </div>
+      <div class="field">
+        <label class="label">Calories (kcal)</label>
+        <input class="input" type="number" name="calories" required>
+      </div>
+      <div class="field">
+        <label class="label">Weight (kg)</label>
+        <input class="input" type="number" step="0.1" name="weight">
+      </div>
+      <div class="field">
+        <label class="label">Height (cm)</label>
+        <input class="input" type="number" step="0.1" name="height_cm">
+      </div>
+
+      <div class="control">
+        <button class="button is-primary" type="submit">Save Entry</button>
+        <a class="button is-light" href="{{ url_for('dashboard') }}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</section>
+</body>
+</html>

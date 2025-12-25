@@ -1,123 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Health Risk Prediction</title>
-    <style>
-        body {
-            font-family: Arial;
-            background: #eef1f5;
-            padding: 20px;
-        }
-        .container {
-            width: 450px;
-            margin: auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 6px 0;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background: #0077ff;
-            color: white;
-            border: none;
-            margin-top: 10px;
-            border-radius: 5px;
-        }
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            background: #d9ffd9;
-            border-radius: 5px;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        .flash {
-            color: red;
-            margin-bottom: 10px;
-        }
-    </style>
+    <title>HealthPredict Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <div>
-            {% if username %}
-                Welcome, {{ username }}!
-            {% endif %}
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">🏥 HealthPredict Pro</a>
         </div>
-        <div>
-            <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+    
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card shadow">
+                    <div class="card-body text-center">
+                        <h2 class="mb-4">Predict Your Health Risks</h2>
+                        <p class="mb-4">Using Machine Learning to analyze your daily routines</p>
+                        
+                        <form method="POST" action="/predict">
+                            <div class="mb-3">
+                                <label class="form-label">Sleep Hours</label>
+                                <input type="number" step="0.1" class="form-control" name="sleep_hours" value="7" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Daily Steps</label>
+                                <input type="number" class="form-control" name="steps" value="5000" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Heart Rate</label>
+                                <input type="number" class="form-control" name="heart_rate" value="72" required>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label">Stress Level (1-10)</label>
+                                <input type="number" min="1" max="10" class="form-control" name="stress_level" value="5" required>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary w-100">Predict Health Risk</button>
+                        </form>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="d-grid gap-2">
+                            <a href="/login" class="btn btn-outline-primary">Login</a>
+                            <a href="/register" class="btn btn-success">Register</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <div class="flash">
-          {% for category, message in messages %}
-            <p>{{ message }}</p>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
-    <h2>Health Risk Prediction</h2>
-
-    <form method="POST">
-        <label>Gender:</label>
-        <select name="gender" required>
-            <option>Male</option>
-            <option>Female</option>
-        </select>
-
-        <label>Age:</label>
-        <input type="number" name="age" required>
-
-        <label>Sleep Duration (hours):</label>
-        <input type="number" step="0.1" name="sleep_duration" required>
-
-        <label>Quality of Sleep (1-10):</label>
-        <input type="number" step="0.1" name="quality_sleep" required>
-
-        <label>Physical Activity Level:</label>
-        <input type="number" name="activity" required>
-
-        <label>Stress Level (1-10):</label>
-        <input type="number" name="stress" required>
-
-        <label>BMI Category:</label>
-        <select name="bmi" required>
-            <option>Underweight</option>
-            <option>Normal</option>
-            <option>Overweight</option>
-            <option>Obese</option>
-        </select>
-
-        <label>Heart Rate:</label>
-        <input type="number" name="heart_rate" required>
-
-        <label>Daily Steps:</label>
-        <input type="number" name="steps" required>
-
-        <button type="submit">Predict</button>
-    </form>
-
-    {% if prediction %}
-    <div class="result">
-        <strong>Prediction:</strong> {{ prediction }}
-    </div>
-    {% endif %}
-</div>
-
 </body>
 </html>

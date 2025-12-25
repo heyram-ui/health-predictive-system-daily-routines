@@ -1,0 +1,194 @@
+<!-- templates/emergency-alert.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emergency Alert - HealthPredict Pro</title>
+    <style>
+        .emergency-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        .symptom-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 15px;
+            margin: 5px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .symptom-btn:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.05);
+        }
+        .critical { border: 3px solid #ff0000; animation: pulse 1.5s infinite; }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255,0,0,0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(255,0,0,0); }
+            100% { box-shadow: 0 0 0 0 rgba(255,0,0,0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-danger">🚨 Emergency Health Assistance</h1>
+        
+        <!-- Quick Symptoms -->
+        <div class="emergency-card">
+            <h3>Quick Symptom Selection</h3>
+            <div class="row" id="symptom-buttons">
+                <div class="col-md-3">
+                    <button class="symptom-btn critical" data-symptom="chest pain">
+                        💔 Chest Pain
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="symptom-btn critical" data-symptom="difficulty breathing">
+                        😫 Difficulty Breathing
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="symptom-btn" data-symptom="severe headache">
+                        🤕 Severe Headache
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="symptom-btn" data-symptom="dizziness">
+                        💫 Dizziness/Fainting
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Custom Symptom -->
+            <div class="mt-4">
+                <input type="text" id="custom-symptom" 
+                       placeholder="Describe your symptom..." 
+                       class="form-control">
+                <button onclick="sendEmergencyAlert()" 
+                        class="btn btn-danger btn-lg w-100 mt-3">
+                    🚑 SEND EMERGENCY ALERT
+                </button>
+            </div>
+        </div>
+        
+        <!-- Nearby Hospitals -->
+        <div class="card mt-4" id="hospitals-list">
+            <div class="card-body">
+                <h4>🏥 Nearest Hospitals</h4>
+                <div id="hospitals"></div>
+            </div>
+        </div>
+        
+        <!-- First Aid Instructions -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h4>🆘 First Aid Instructions</h4>
+                <div id="first-aid"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const criticalSymptoms = [
+            'chest pain', 'difficulty breathing', 'severe bleeding',
+            'unconscious', 'seizure', 'stroke symptoms'
+        ];
+        
+        // Symptom button click
+        document.querySelectorAll('.symptom-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const symptom = this.dataset.symptom;
+                document.getElementById('custom-symptom').value = symptom;
+                sendEmergencyAlert(symptom);
+            });
+        });
+        
+        async function sendEmergencyAlert(symptom = null) {
+            symptom = symptom || document.getElementById('custom-symptom').value;
+            
+            if (!symptom) {
+                alert('Please describe your symptom');
+                return;
+            }
+            
+            const isCritical = criticalSymptoms.some(crit => 
+                symptom.toLowerCase().includes(crit));
+            
+            const severity = isCritical ? 'critical' : 'high';
+            
+            // Show loading
+            alert(`Sending ${severity.toUpperCase()} alert for: ${symptom}`);
+            
+            try {
+                const response = await fetch('/emergency-alert', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({symptom, severity})
+                });
+                
+                const result = await response.json();
+                
+                if (result.alert_sent) {
+                    // Show hospitals
+                    displayHospitals(result.hospitals);
+                    // Show first aid
+                    displayFirstAid(symptom);
+                    
+                    // Auto-call emergency if critical
+                    if (isCritical) {
+                        setTimeout(() => {
+                            if (confirm('Call emergency services (112/911)?')) {
+                                window.location.href = 'tel:112';
+                            }
+                        }, 2000);
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Alert error:', error);
+            }
+        }
+        
+        function displayHospitals(hospitals) {
+            const container = document.getElementById('hospitals');
+            container.innerHTML = hospitals.map(h => `
+                <div class="hospital-item mb-3 p-3 border rounded">
+                    <h5>${h.name}</h5>
+                    <p>${h.address}</p>
+                    <p>📞 ${h.phone}</p>
+                    <p>📍 ${h.distance} km away</p>
+                    <a href="${h.directions}" class="btn btn-sm btn-primary">
+                        Get Directions
+                    </a>
+                </div>
+            `).join('');
+        }
+        
+        function displayFirstAid(symptom) {
+            const firstAid = {
+                'chest pain': 'Sit down, rest, take aspirin if available',
+                'difficulty breathing': 'Sit upright, use inhaler if available',
+                'bleeding': 'Apply direct pressure with clean cloth'
+            };
+            
+            document.getElementById('first-aid').innerHTML = `
+                <div class="alert alert-info">
+                    <strong>First Aid for ${symptom}:</strong><br>
+                    ${firstAid[symptom.toLowerCase()] || 'Stay calm, rest, monitor symptoms'}
+                </div>
+            `;
+        }
+        
+        // Auto-detect location for hospitals
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                console.log('Location detected:', position.coords);
+            });
+        }
+    </script>
+</body>
+</html>

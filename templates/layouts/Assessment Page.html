@@ -1,0 +1,858 @@
+# Add Part 3 - Assessment Page
+python -c "
+part3 = '''
+@app.route('/assess', methods=['GET', 'POST'])
+def assess():
+    if request.method == 'POST':
+        try:
+            # Get all form data
+            data = {
+                'name': request.form.get('name', ''),
+                'age': int(request.form.get('age', 45)),
+                'gender': request.form.get('gender', ''),
+                'systolic_bp': int(request.form.get('systolic_bp', 120)),
+                'diastolic_bp': int(request.form.get('diastolic_bp', 80)),
+                'cholesterol': request.form.get('cholesterol', 'normal'),
+                'glucose': float(request.form.get('glucose', 100)),
+                'bmi': float(request.form.get('bmi', 25)),
+                'weight': float(request.form.get('weight', 70)),
+                'height': float(request.form.get('height', 170)),
+                'smoking': 1 if request.form.get('smoking') == 'yes' else 0,
+                'alcohol': request.form.get('alcohol', 'none'),
+                'sleep_hours': float(request.form.get('sleep_hours', 7)),
+                'mobile_hours': float(request.form.get('mobile_hours', 3)),
+                'physical_activity': request.form.get('physical_activity', 'sedentary'),
+                'family_history': request.form.get('family_history', 'no'),
+                'sleep_apnea': 1 if request.form.get('sleep_apnea') == 'yes' else 0,
+                'stress_level': int(request.form.get('stress_level', 3)),
+                'diet_quality': request.form.get('diet_quality', 'average'),
+                'water_intake': float(request.form.get('water_intake', 2))
+            }
+            
+            # Calculate comprehensive risk score
+            score = 0
+            factors = []
+            recommendations = []
+            action_items = []
+            
+            # Age factor (0-25 points)
+            age = data['age']
+            if age > 65:
+                score += 25
+                factors.append('Age > 65 (+25)')
+                recommendations.append('Regular senior health checkups every 6 months')
+            elif age > 50:
+                score += 20
+                factors.append(f'Age {age} (51-65) (+20)')
+                recommendations.append('Annual comprehensive health screening')
+            elif age > 35:
+                score += 15
+                factors.append(f'Age {age} (36-50) (+15)')
+                recommendations.append('Biannual health checkups recommended')
+            else:
+                score += 10
+                factors.append(f'Age {age} (<35) (+10)')
+                recommendations.append('Annual basic health checkup')
+            
+            # Blood Pressure (0-30 points)
+            systolic = data['systolic_bp']
+            diastolic = data['diastolic_bp']
+            if systolic >= 180 or diastolic >= 120:
+                score += 30
+                factors.append(f'BP {systolic}/{diastolic} (Hypertensive Crisis) (+30)')
+                recommendations.append('Urgent medical attention required')
+                action_items.append('Consult doctor within 24 hours')
+            elif systolic >= 140 or diastolic >= 90:
+                score += 25
+                factors.append(f'BP {systolic}/{diastolic} (Stage 2) (+25)')
+                recommendations.append('Monitor BP twice daily')
+                action_items.append('Doctor appointment within week')
+            elif systolic >= 130 or diastolic >= 80:
+                score += 20
+                factors.append(f'BP {systolic}/{diastolic} (Stage 1) (+20)')
+                recommendations.append('Reduce salt intake to <5g/day')
+                action_items.append('Home BP monitoring device')
+            else:
+                score += 10
+                factors.append(f'BP {systolic}/{diastolic} (Normal) (+10)')
+            
+            # Cholesterol (0-20 points)
+            cholesterol = data['cholesterol']
+            if cholesterol == 'very_high':
+                score += 20
+                factors.append('Cholesterol: Very High (+20)')
+                recommendations.append('Low-fat diet, consider medication')
+                action_items.append('Lipid profile test every 3 months')
+            elif cholesterol == 'high':
+                score += 15
+                factors.append('Cholesterol: High (+15)')
+                recommendations.append('Reduce saturated fats')
+                action_items.append('Exercise 30 mins daily')
+            elif cholesterol == 'borderline':
+                score += 10
+                factors.append('Cholesterol: Borderline (+10)')
+                recommendations.append('Monitor cholesterol levels')
+            else:
+                score += 5
+                factors.append('Cholesterol: Normal (+5)')
+            
+            # BMI (0-25 points)
+            bmi = data['bmi']
+            if bmi > 35:
+                score += 25
+                factors.append(f'BMI {bmi} (Obese Class III) (+25)')
+                recommendations.append('Weight loss program with nutritionist')
+                action_items.append('Target: Lose 5-10% body weight in 6 months')
+            elif bmi > 30:
+                score += 20
+                factors.append(f'BMI {bmi} (Obese) (+20)')
+                recommendations.append('Calorie-controlled diet')
+                action_items.append('Daily 45-minute exercise')
+            elif bmi > 25:
+                score += 15
+                factors.append(f'BMI {bmi} (Overweight) (+15)')
+                recommendations.append('Portion control and regular exercise')
+                action_items.append('Weekly weight tracking')
+            elif bmi >= 18.5:
+                score += 5
+                factors.append(f'BMI {bmi} (Normal) (+5)')
+            else:
+                score += 10
+                factors.append(f'BMI {bmi} (Underweight) (+10)')
+                recommendations.append('Increase calorie intake with healthy foods')
+            
+            # Lifestyle factors
+            if data['smoking']:
+                score += 25
+                factors.append('Smoking: Yes (+25)')
+                recommendations.append('Smoking cessation program')
+                action_items.append('Quit smoking support group')
+            
+            alcohol = data['alcohol']
+            if alcohol == 'heavy':
+                score += 20
+                factors.append('Alcohol: Heavy (+20)')
+                recommendations.append('Reduce alcohol consumption')
+                action_items.append('Limit to 1-2 drinks/week')
+            elif alcohol == 'moderate':
+                score += 10
+                factors.append('Alcohol: Moderate (+10)')
+                recommendations.append('Maintain moderate consumption')
+            
+            # Sleep factors
+            sleep_hours = data['sleep_hours']
+            if sleep_hours < 6:
+                score += 15
+                factors.append(f'Sleep: {sleep_hours}h (Insufficient) (+15)')
+                recommendations.append('Aim for 7-9 hours of sleep')
+                action_items.append('Sleep schedule: 10 PM - 6 AM')
+            elif sleep_hours > 9:
+                score += 10
+                factors.append(f'Sleep: {sleep_hours}h (Excessive) (+10)')
+                recommendations.append('Maintain 7-8 hours of sleep')
+            
+            if data['sleep_apnea']:
+                score += 20
+                factors.append('Sleep Apnea: Yes (+20)')
+                recommendations.append('Sleep study recommended')
+                action_items.append('Consult sleep specialist')
+            
+            # Mobile/screen time
+            mobile_hours = data['mobile_hours']
+            if mobile_hours > 6:
+                score += 15
+                factors.append(f'Screen Time: {mobile_hours}h (High) (+15)')
+                recommendations.append('Reduce screen time before bed')
+                action_items.append('Digital detox 1 hour before sleep')
+            
+            # Physical activity
+            activity = data['physical_activity']
+            if activity == 'sedentary':
+                score += 15
+                factors.append('Activity: Sedentary (+15)')
+                recommendations.append('Start with 15 min walking daily')
+                action_items.append('10,000 steps/day target')
+            elif activity == 'light':
+                score += 8
+                factors.append('Activity: Light (+8)')
+                recommendations.append('Increase to 30 min moderate activity')
+            elif activity == 'moderate':
+                score += 4
+                factors.append('Activity: Moderate (+4)')
+            else:
+                factors.append('Activity: Active (+0)')
+            
+            # Stress level
+            stress = data['stress_level']
+            if stress >= 4:
+                score += stress * 5
+                factors.append(f'Stress Level: {stress}/5 (+{stress*5})')
+                recommendations.append('Practice meditation and mindfulness')
+                action_items.append('Daily 10-minute meditation')
+            
+            # Family history
+            if data['family_history'] == 'yes':
+                score += 10
+                factors.append('Family History: Yes (+10)')
+                recommendations.append('Regular screening for hereditary conditions')
+            
+            # Diet quality
+            diet = data['diet_quality']
+            if diet == 'poor':
+                score += 15
+                factors.append('Diet: Poor (+15)')
+                recommendations.append('Consult nutritionist for meal plan')
+                action_items.append('Food diary for 2 weeks')
+            elif diet == 'average':
+                score += 8
+                factors.append('Diet: Average (+8)')
+                recommendations.append('Increase fruits and vegetables')
+            
+            # Water intake
+            water = data['water_intake']
+            if water < 1.5:
+                score += 10
+                factors.append(f'Water: {water}L (Low) (+10)')
+                recommendations.append('Drink 2-3 liters of water daily')
+                action_items.append('Carry water bottle everywhere')
+            
+            # Cap score at 100
+            score = min(round(score, 1), 100)
+            
+            # Determine risk level and color
+            if score >= 75:
+                risk_level = 'High Risk'
+                color = '#dc3545'
+                severity = 'high'
+                risk_message = 'Immediate attention required'
+                
+                # Additional high-risk recommendations
+                recommendations.extend([
+                    'Schedule doctor appointment within 48 hours',
+                    'Consider comprehensive medical evaluation',
+                    'Emergency contact information updated',
+                    'Regular monitoring of vital signs'
+                ])
+                action_items.extend([
+                    'Complete health checkup within week',
+                    'Create emergency health plan',
+                    'Daily symptom tracking'
+                ])
+                
+            elif score >= 50:
+                risk_level = 'Moderate Risk'
+                color = '#ffc107'
+                severity = 'medium'
+                risk_message = 'Proactive management needed'
+                
+                recommendations.extend([
+                    'Schedule appointment within 2 weeks',
+                    'Begin lifestyle modifications',
+                    'Regular health parameter tracking'
+                ])
+                action_items.extend([
+                    'Monthly health review',
+                    'Join preventive health program',
+                    'Health goal setting'
+                ])
+                
+            elif score >= 25:
+                risk_level = 'Low Risk'
+                color = '#17a2b8'
+                severity = 'low'
+                risk_message = 'Maintain healthy habits'
+                
+                recommendations.extend([
+                    'Annual health checkup',
+                    'Continue healthy lifestyle',
+                    'Preventive measures'
+                ])
+                action_items.extend([
+                    'Quarterly health assessment',
+                    'Wellness program participation',
+                    'Health education'
+                ])
+                
+            else:
+                risk_level = 'Very Low Risk'
+                color = '#28a745'
+                severity = 'very_low'
+                risk_message = 'Excellent health status'
+                
+                recommendations.extend([
+                    'Maintain current lifestyle',
+                    'Share healthy habits with others',
+                    'Annual preventive screening'
+                ])
+                action_items.extend([
+                    'Community health volunteering',
+                    'Health mentor program',
+                    'Wellness challenges'
+                ])
+            
+            # Generate action plan
+            action_plan = f'''
+            <div class="action-plan">
+                <h5><i class="fas fa-tasks"></i> 30-Day Action Plan</h5>
+                <ul>
+                    {''.join([f'<li><i class="fas fa-check-circle text-success"></i> {item}</li>' for item in action_items[:5]])}
+                </ul>
+            </div>
+            '''
+            
+            # Food recommendations based on risk factors
+            food_recommendations = []
+            if bmi > 25:
+                food_recommendations.extend([
+                    'Leafy greens (spinach, kale) - Low calorie, high fiber',
+                    'Lean proteins (chicken, fish) - Maintain muscle mass',
+                    'Whole grains (oats, quinoa) - Sustained energy'
+                ])
+            if cholesterol != 'normal':
+                food_recommendations.extend([
+                    'Oats and barley - Reduce cholesterol',
+                    'Nuts (almonds, walnuts) - Healthy fats',
+                    'Fatty fish (salmon) - Omega-3 fatty acids'
+                ])
+            if data['sleep_apnea']:
+                food_recommendations.extend([
+                    'Cherries - Natural melatonin source',
+                    'Bananas - Magnesium for muscle relaxation',
+                    'Almonds - Melatonin and magnesium'
+                ])
+            
+            # Save to database
+            conn = sqlite3.connect('healthcare_system.db')
+            c = conn.cursor()
+            
+            # Save user if name provided
+            user_id = None
+            if data['name']:
+                c.execute('''
+                    INSERT OR IGNORE INTO users (name, email, age, gender) 
+                    VALUES (?, ?, ?, ?)
+                ''', (data['name'], f\"{data['name'].replace(' ', '').lower()}@example.com\", data['age'], data['gender']))
+                user_id = c.lastrowid
+            
+            # Save assessment
+            c.execute('''
+                INSERT INTO assessments 
+                (user_id, age, systolic_bp, diastolic_bp, cholesterol, glucose, bmi, 
+                 smoking, alcohol, sleep_hours, mobile_hours, physical_activity, 
+                 family_history, risk_score, risk_level, risk_factors, 
+                 recommendations, action_plan, progress, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                user_id, data['age'], data['systolic_bp'], data['diastolic_bp'], 
+                data['cholesterol'], data['glucose'], data['bmi'], 
+                data['smoking'], data['alcohol'], data['sleep_hours'], 
+                data['mobile_hours'], data['physical_activity'], 
+                data['family_history'], score, risk_level, 
+                '; '.join(factors), '; '.join(recommendations), 
+                action_plan, 0, 'active'
+            ))
+            
+            assessment_id = c.lastrowid
+            
+            # Save progress items
+            for i, item in enumerate(action_items[:5]):
+                c.execute('''
+                    INSERT INTO progress 
+                    (assessment_id, task_name, category, current_value, target_value, due_date)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                ''', (
+                    assessment_id, item, 'Action Item', 0, 100, 
+                    (datetime.now() + timedelta(days=30)).strftime('%Y-%m-%d')
+                ))
+            
+            conn.commit()
+            conn.close()
+            
+            # Prepare response
+            response_data = {
+                'success': True,
+                'assessment_id': assessment_id,
+                'risk_score': score,
+                'risk_level': risk_level,
+                'risk_message': risk_message,
+                'color': color,
+                'severity': severity,
+                'factors': factors[:10],  # Show top 10 factors
+                'recommendations': recommendations[:8],  # Show top 8 recommendations
+                'action_items': action_items[:5],  # Show top 5 action items
+                'food_recommendations': food_recommendations[:5],  # Show top 5 foods
+                'progress_plan': {
+                    'total_tasks': len(action_items),
+                    'pending_tasks': len(action_items),
+                    'completed_tasks': 0,
+                    'progress_percentage': 0
+                }
+            }
+            
+            return jsonify(response_data)
+            
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'error': str(e),
+                'message': 'Error processing assessment. Please check your inputs.'
+            })
+    
+    # GET request - show assessment form
+    return HEADER + '''
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="form-container">
+                    <div class="text-center mb-5">
+                        <h2 class="section-title">Comprehensive Health Assessment</h2>
+                        <p class="text-muted">Fill in your health information for personalized AI analysis</p>
+                    </div>
+                    
+                    <form id="healthAssessmentForm">
+                        <!-- Personal Information -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-user"></i> Personal Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Full Name (Optional)</label>
+                                        <input type="text" class="form-control" name="name" placeholder="Enter your name">
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label">Age *</label>
+                                        <input type="number" class="form-control" name="age" min="1" max="120" value="45" required>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label">Gender</label>
+                                        <select class="form-select" name="gender">
+                                            <option value="male">Male</option>
+                                            <option value="female">Female</option>
+                                            <option value="other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vital Signs -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-heartbeat"></i> Vital Signs</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Blood Pressure (Systolic) *</label>
+                                        <input type="number" class="form-control" name="systolic_bp" min="60" max="250" value="120" required>
+                                        <small class="text-muted">Top number (e.g., 120 in 120/80)</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Blood Pressure (Diastolic) *</label>
+                                        <input type="number" class="form-control" name="diastolic_bp" min="40" max="150" value="80" required>
+                                        <small class="text-muted">Bottom number (e.g., 80 in 120/80)</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Cholesterol Level *</label>
+                                        <select class="form-select" name="cholesterol" required>
+                                            <option value="normal">Normal (< 200 mg/dL)</option>
+                                            <option value="borderline">Borderline High (200-239)</option>
+                                            <option value="high">High (240-279)</option>
+                                            <option value="very_high">Very High (≥ 280)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Blood Glucose (mg/dL) *</label>
+                                        <input type="number" class="form-control" name="glucose" min="50" max="500" value="100" step="0.1" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Body Measurements -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-weight"></i> Body Measurements</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Weight (kg) *</label>
+                                        <input type="number" class="form-control" name="weight" min="20" max="200" value="70" step="0.1" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Height (cm) *</label>
+                                        <input type="number" class="form-control" name="height" min="50" max="250" value="170" step="0.1" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">BMI *</label>
+                                        <input type="number" class="form-control" name="bmi" min="10" max="50" value="25" step="0.1" required>
+                                        <small class="text-muted">Will be calculated automatically if weight/height provided</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Lifestyle Factors -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-running"></i> Lifestyle Factors</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Do you smoke?</label>
+                                        <select class="form-select" name="smoking">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Alcohol Consumption</label>
+                                        <select class="form-select" name="alcohol">
+                                            <option value="none">None</option>
+                                            <option value="light">Light (1-7 drinks/week)</option>
+                                            <option value="moderate">Moderate (8-14 drinks/week)</option>
+                                            <option value="heavy">Heavy (15+ drinks/week)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Physical Activity Level</label>
+                                        <select class="form-select" name="physical_activity">
+                                            <option value="sedentary">Sedentary (little or no exercise)</option>
+                                            <option value="light">Light (1-2 days/week)</option>
+                                            <option value="moderate">Moderate (3-5 days/week)</option>
+                                            <option value="active">Active (daily exercise)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Sleep Hours (per night)</label>
+                                        <input type="number" class="form-control" name="sleep_hours" min="0" max="24" value="7" step="0.5" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Screen Time (hours/day)</label>
+                                        <input type="number" class="form-control" name="mobile_hours" min="0" max="24" value="3" step="0.5" required>
+                                        <small class="text-muted">Phone, computer, TV combined</small>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Sleep Apnea Diagnosis</label>
+                                        <select class="form-select" name="sleep_apnea">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Additional Health Factors -->
+                        <div class="card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0"><i class="fas fa-clipboard-check"></i> Additional Health Factors</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Stress Level (1-5)</label>
+                                        <select class="form-select" name="stress_level">
+                                            <option value="1">1 - Very Low</option>
+                                            <option value="2">2 - Low</option>
+                                            <option value="3" selected>3 - Moderate</option>
+                                            <option value="4">4 - High</option>
+                                            <option value="5">5 - Very High</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Family History of Heart Disease</label>
+                                        <select class="form-select" name="family_history">
+                                            <option value="no">No</option>
+                                            <option value="yes">Yes</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Diet Quality</label>
+                                        <select class="form-select" name="diet_quality">
+                                            <option value="poor">Poor (fast food, processed)</option>
+                                            <option value="average" selected>Average (mixed diet)</option>
+                                            <option value="good">Good (balanced, home-cooked)</option>
+                                            <option value="excellent">Excellent (mediterranean, plant-based)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Water Intake (liters/day)</label>
+                                        <input type="number" class="form-control" name="water_intake" min="0" max="10" value="2" step="0.5" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                <i class="fas fa-calculator"></i> Generate Health Assessment
+                            </button>
+                            <button type="reset" class="btn btn-secondary btn-lg px-5 ms-3">
+                                <i class="fas fa-redo"></i> Reset Form
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <div id="assessmentResult" class="mt-5" style="display: none;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-calculate BMI when weight or height changes
+        document.querySelector('input[name=\"weight\"]').addEventListener('input', calculateBMI);
+        document.querySelector('input[name=\"height\"]').addEventListener('input', calculateBMI);
+        
+        function calculateBMI() {
+            const weight = parseFloat(document.querySelector('input[name=\"weight\"]').value);
+            const height = parseFloat(document.querySelector('input[name=\"height\"]').value) / 100; // Convert cm to m
+            
+            if (weight > 0 && height > 0) {
+                const bmi = (weight / (height * height)).toFixed(1);
+                document.querySelector('input[name=\"bmi\"]').value = bmi;
+            }
+        }
+        
+        // Handle form submission
+        document.getElementById('healthAssessmentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const form = e.target;
+            const submitBtn = form.querySelector('button[type=\"submit\"]');
+            const originalText = submitBtn.innerHTML;
+            
+            submitBtn.innerHTML = '<i class=\"fas fa-spinner fa-spin\"></i> Analyzing Health Data...';
+            submitBtn.disabled = true;
+            
+            try {
+                const formData = new FormData(form);
+                const response = await fetch('/assess', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                displayAssessmentResult(data);
+            } catch (error) {
+                alert('Error: ' + error.message);
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        function displayAssessmentResult(data) {
+            const resultDiv = document.getElementById('assessmentResult');
+            
+            if (data.success) {
+                const severityClass = 'risk-' + data.severity;
+                const color = data.color;
+                
+                resultDiv.innerHTML = \`
+                    <div class="result-card \${severityClass}">
+                        <div class="card">
+                            <div class="card-header" style="background: \${color}; color: white;">
+                                <h4 class="mb-0"><i class="fas fa-chart-bar"></i> Health Assessment Results</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="text-center mb-5">
+                                    <h2 class="display-4" style="color: \${color};">\${data.risk_level}</h2>
+                                    <p class="lead">\${data.risk_message}</p>
+                                    
+                                    <div class="row justify-content-center mt-4">
+                                        <div class="col-md-8">
+                                            <div class="progress-container">
+                                                <div class="progress-bar">
+                                                    <div class="progress-fill" style="width: \${data.risk_score}%; background: \${color};"></div>
+                                                </div>
+                                                <div class="d-flex justify-content-between mt-2">
+                                                    <span>0% (Very Low)</span>
+                                                    <span>\${data.risk_score}%</span>
+                                                    <span>100% (Very High)</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mt-3">
+                                        <h5>Risk Score: \${data.risk_score}/100</h5>
+                                        <p class="text-muted">Assessment ID: \${data.assessment_id}</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <!-- Risk Factors -->
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h5><i class="fas fa-exclamation-triangle"></i> Identified Risk Factors</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    \${data.factors.map(factor => 
+                                                        \`<span class="badge bg-light text-dark">\${factor}</span>\`
+                                                    ).join('')}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Recommendations -->
+                                    <div class="col-md-6">
+                                        <div class="card h-100">
+                                            <div class="card-header">
+                                                <h5><i class="fas fa-lightbulb"></i> Recommendations</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="list-group list-group-flush">
+                                                    \${data.recommendations.map(rec => 
+                                                        \`<li class="list-group-item"><i class="fas fa-check-circle text-success me-2"></i>\${rec}</li>\`
+                                                    ).join('')}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Food Recommendations -->
+                                \${data.food_recommendations && data.food_recommendations.length > 0 ? \`
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-utensils"></i> Recommended Foods</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            \${data.food_recommendations.map(food => \`
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="fas fa-apple-alt text-success me-3 fa-2x"></i>
+                                                        <div>
+                                                            <h6 class="mb-1">\${food.split(' - ')[0]}</h6>
+                                                            <small class="text-muted">\${food.split(' - ')[1] || ''}</small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            \`).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                                \` : ''}
+                                
+                                <!-- Action Plan -->
+                                <div class="card mt-4">
+                                    <div class="card-header">
+                                        <h5><i class="fas fa-tasks"></i> 30-Day Action Plan</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6>Tasks to Complete:</h6>
+                                                <ul>
+                                                    \${data.action_items.map(item => \`
+                                                        <li>\${item}</li>
+                                                    \`).join('')}
+                                                </ul>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="card bg-light">
+                                                    <div class="card-body text-center">
+                                                        <h6>Progress Tracking</h6>
+                                                        <div class="progress-container mt-3">
+                                                            <div class="progress-bar">
+                                                                <div class="progress-fill" style="width: \${data.progress_plan.progress_percentage}%; background: \${color};"></div>
+                                                            </div>
+                                                        </div>
+                                                        <p class="mt-2">
+                                                            \${data.progress_plan.completed_tasks} of \${data.progress_plan.total_tasks} tasks completed
+                                                        </p>
+                                                        <button class="btn btn-sm btn-outline-primary mt-2">
+                                                            <i class="fas fa-chart-line"></i> Track Progress
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Action Buttons -->
+                                <div class="text-center mt-4">
+                                    <button onclick="window.print()" class="btn btn-outline-primary me-2">
+                                        <i class="fas fa-print"></i> Print Report
+                                    </button>
+                                    <button onclick="generatePDF(\${data.assessment_id})" class="btn btn-outline-success me-2">
+                                        <i class="fas fa-file-pdf"></i> Download PDF
+                                    </button>
+                                    <button onclick="saveAssessment(\${data.assessment_id})" class="btn btn-outline-info me-2">
+                                        <i class="fas fa-save"></i> Save Assessment
+                                    </button>
+                                    <button onclick="shareResults(\${data.assessment_id})" class="btn btn-outline-secondary">
+                                        <i class="fas fa-share-alt"></i> Share
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                \`;
+                
+                resultDiv.style.display = 'block';
+                resultDiv.scrollIntoView({ behavior: 'smooth' });
+                
+                // Animate progress bars
+                setTimeout(() => {
+                    const progressFill = resultDiv.querySelector('.progress-fill');
+                    progressFill.style.width = data.risk_score + '%';
+                }, 100);
+                
+            } else {
+                resultDiv.innerHTML = \`
+                    <div class="alert alert-danger">
+                        <h5><i class="fas fa-exclamation-triangle"></i> Error</h5>
+                        <p>\${data.message || data.error}</p>
+                        <button onclick="location.reload()" class="btn btn-sm btn-outline-danger">
+                            Try Again
+                        </button>
+                    </div>
+                \`;
+                resultDiv.style.display = 'block';
+            }
+        }
+        
+        function generatePDF(assessmentId) {
+            alert('PDF generation feature would be implemented here for assessment ' + assessmentId);
+            // In real implementation, this would call a backend endpoint to generate PDF
+        }
+        
+        function saveAssessment(assessmentId) {
+            alert('Saving assessment ' + assessmentId + ' to your profile...');
+            // In real implementation, this would save to user's account
+        }
+        
+        function shareResults(assessmentId) {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Health Assessment Results',
+                    text: 'Check out my health assessment results from HealthCare Pro',
+                    url: window.location.href
+                });
+            } else {
+                alert('Share feature is available on modern browsers. Assessment ID: ' + assessmentId);
+            }
+        }
+    </script>
+    
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2024 HealthCare Pro</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

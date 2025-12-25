@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="animate-in">
+    <h2 class="text-white-shadow text-center mb-5">Healthy Living Guide</h2>
+
+    <div class="row">
+        <!-- Foods -->
+        <div class="col-md-6">
+            <div class="glass-card">
+                <h3 class="text-success mb-4"><i class="fas fa-apple-alt me-2"></i>Nutrient-Rich Foods</h3>
+                <div class="accordion" id="foodAccordion">
+                    <div class="accordion-item bg-transparent border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed glass-card mb-2" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                <i class="fas fa-leaf me-2 text-success"></i> Leafy Greens
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#foodAccordion">
+                            <div class="accordion-body bg-white rounded">
+                                Spinach, Kale, Swiss Chard - High in Vitamin A, C, K and Iron.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item bg-transparent border-0">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed glass-card mb-2" type="button"
+                                data-bs-toggle="collapse" data-bs-target="#collapseTwo">
+                                <i class="fas fa-fish me-2 text-info"></i> Fatty Fish
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#foodAccordion">
+                            <div class="accordion-body bg-white rounded">
+                                Salmon, Mackerel, Sardines - Rich in Omega-3 fatty acids for heart health.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exercises -->
+        <div class="col-md-6">
+            <div class="glass-card">
+                <h3 class="text-warning mb-4"><i class="fas fa-dumbbell me-2"></i>Effective Exercises</h3>
+                <div class="list-group list-group-flush bg-transparent">
+                    <a href="#"
+                        class="list-group-item list-group-item-action bg-transparent text-dark border-bottom border-light">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Brisk Walking</h5>
+                            <small>30 mins/day</small>
+                        </div>
+                        <p class="mb-1">Low impact key for cardiovascular health.</p>
+                    </a>
+                    <a href="#"
+                        class="list-group-item list-group-item-action bg-transparent text-dark border-bottom border-light">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">HIIT</h5>
+                            <small>20 mins/day</small>
+                        </div>
+                        <p class="mb-1">High Intensity Interval Training for metabolic boost.</p>
+                    </a>
+                    <a href="#"
+                        class="list-group-item list-group-item-action bg-transparent text-dark border-bottom border-light">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Yoga</h5>
+                            <small>45 mins/day</small>
+                        </div>
+                        <p class="mb-1">Great for flexibility and mental stress reduction.</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

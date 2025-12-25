@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row mb-4 animate-in">
+    <div class="col-md-8">
+        <h2 class="text-white-shadow">Welcome back, {{ user.name }}!</h2>
+        <p class="text-white">Here is your daily health tracking overview.</p>
+    </div>
+    <div class="col-md-4 text-end">
+        <a href="/assess" class="btn btn-glass"><i class="fas fa-plus me-2"></i>New Daily Entry</a>
+    </div>
+</div>
+
+<div class="row g-4 mb-5 animate-in" style="animation-delay: 0.1s;">
+    <!-- Summary Cards -->
+    <div class="col-md-3">
+        <div class="glass-card text-center p-3 h-100">
+            <h6 class="text-muted">Avg Health Score</h6>
+            <h1 class="display-4 fw-bold text-primary">{{ avg_score|round|int }}</h1>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="glass-card text-center p-3 h-100">
+            <h6 class="text-muted">Total Assessments</h6>
+            <h1 class="display-4 fw-bold">{{ total_assessments }}</h1>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="glass-card p-3 h-100 d-flex align-items-center justify-content-center bg-danger text-white"
+            style="background: {{ 'rgba(220, 53, 69, 0.8)' if last_risk == 'High Risk' else 'rgba(40, 167, 69, 0.6)' }}">
+            <div>
+                <h6 class="mb-1">Current Status</h6>
+                <h2 class="mb-0">{{ last_risk or 'No Data' }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 animate-in" style="animation-delay: 0.2s;">
+    <div class="col-lg-8">
+        <div class="glass-card">
+            <h4 class="mb-4">Health Score Trend</h4>
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="glass-card">
+            <h4 class="mb-4">Recent Activity</h4>
+            <div class="list-group list-group-flush bg-transparent">
+                {% for record in recent_history %}
+                <div class="list-group-item bg-transparent border-bottom border-light text-dark">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">{{ record.created_at }}</h6>
+                        <span class="badge {{ 'bg-danger' if record.risk_level == 'High Risk' else 'bg-success' }}">
+                            {{ record.risk_score }}
+                        </span>
+                    </div>
+                    <p class="mb-1 small">{{ record.risk_level }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('trendChart').getContext('2d');
+    const trendChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ dates| tojson }},
+    datasets: [{
+        label: 'Health Score',
+        data: {{ scores| tojson }},
+        borderColor: '#4361ee',
+        backgroundColor: 'rgba(67, 97, 238, 0.2)',
+        tension: 0.4,
+        fill: true
+            }]
+        },
+    options: {
+        responsive: true,
+            maintainAspectRatio: false,
+                plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                    max: 100
+            }
+        }
+    }
+    });
+</script>
+{% endblock %}

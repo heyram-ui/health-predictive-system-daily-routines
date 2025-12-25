@@ -1,0 +1,9 @@
+﻿flask==3.1.0
+sqlalchemy==2.0.40
+flask-sqlalchemy==3.1.1
+flask-login==0.6.3
+flask-migrate==4.1.0
+pandas==2.2.0
+numpy==1.26.4
+joblib==1.4.2
+scikit-learn==1.5.0

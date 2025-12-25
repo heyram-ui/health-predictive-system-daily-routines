@@ -1,0 +1,15 @@
+[
+  {
+    "date": "2006-06-28",
+    "sleep_hours": 9.0,
+    "steps": 3500,
+    "water_l": 6.0,
+    "activity_minutes": 3,
+    "stress_level": 2,
+    "screen_hours": 5.0,
+    "calories": 100,
+    "weight": 60.0,
+    "height_cm": 137.0,
+    "bmi": 32.0
+  }
+]

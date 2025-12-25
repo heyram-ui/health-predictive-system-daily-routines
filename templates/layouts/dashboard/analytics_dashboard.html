@@ -1,0 +1,22 @@
+<!-- analytics_dashboard.html -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <!-- Health Score Card -->
+    <div class="card bg-gradient-to-r from-green-400 to-blue-500 text-white">
+        <div class="card-body">
+            <h3 class="card-title">🏆 Health Score</h3>
+            <div class="radial-progress text-4xl" style="--value:85; --size:8rem;">85</div>
+            <p>Better than 92% users</p>
+        </div>
+    </div>
+    
+    <!-- Risk Prediction Card -->
+    <div class="card bg-gradient-to-r from-orange-400 to-red-500 text-white">
+        <h3 class="card-title">⚠️ Risk Alerts</h3>
+        <div class="alert alert-warning">
+            <span>High stress detected</span>
+            <div class="progress progress-warning w-56">
+                <div class="progress-bar" style="width: 70%"></div>
+            </div>
+        </div>
+    </div>
+</div>

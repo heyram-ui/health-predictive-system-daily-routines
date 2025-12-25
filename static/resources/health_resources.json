@@ -1,0 +1,51 @@
+{
+  "emergency_contacts": {
+    "national": [
+      {"name": "National Emergency", "number": "112/911", "description": "Police/Fire/Ambulance"},
+      {"name": "Suicide Prevention", "number": "1-800-273-8255", "description": "24/7 free support"},
+      {"name": "Poison Control", "number": "1-800-222-1222", "description": "Poison emergencies"},
+      {"name": "Domestic Violence", "number": "1-800-799-7233", "description": "24/7 confidential support"}
+    ]
+  },
+  "hospitals": [
+    {
+      "name": "City General Hospital",
+      "address": "123 Medical Center Dr",
+      "phone": "(555) 123-4567",
+      "emergency": true,
+      "specialties": ["Trauma", "Cardiology", "Neurology"]
+    }
+  ],
+  "first_aid": {
+    "heart_attack": {
+      "steps": [
+        "Call emergency services immediately",
+        "Have person sit down and rest",
+        "Give aspirin if available and not allergic",
+        "Loosen tight clothing",
+        "Be prepared to perform CPR if needed"
+      ],
+      "donts": [
+        "Don't let the person deny symptoms",
+        "Don't wait to see if symptoms go away",
+        "Don't give anything by mouth except aspirin"
+      ]
+    },
+    "stroke": {
+      "signs": ["Facial drooping", "Arm weakness", "Speech difficulty"],
+      "action": "Call emergency immediately - Time is brain!"
+    }
+  },
+  "mental_health_resources": {
+    "hotlines": [
+      {"name": "Crisis Text Line", "contact": "Text HOME to 741741", "hours": "24/7"},
+      {"name": "Veterans Crisis Line", "contact": "1-800-273-8255 then press 1", "hours": "24/7"},
+      {"name": "Disaster Distress Helpline", "contact": "1-800-985-5990", "hours": "24/7"}
+    ],
+    "apps": [
+      {"name": "Calm", "purpose": "Meditation & Sleep", "cost": "Freemium"},
+      {"name": "Headspace", "purpose": "Mindfulness", "cost": "Subscription"},
+      {"name": "Woebot", "purpose": "AI Therapy", "cost": "Free"}
+    ]
+  }
+}

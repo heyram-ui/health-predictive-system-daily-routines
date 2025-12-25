@@ -1,0 +1,190 @@
+/* static/css/mobile-accessible.css */
+/* Designed for low-bandwidth areas and basic smartphones */
+
+/* Basic reset for maximum compatibility */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+    background: #f5f5f5;
+    -webkit-text-size-adjust: 100%; /* Prevent font scaling in Safari */
+}
+
+/* Large touch targets for accessibility */
+button, 
+input[type="submit"],
+input[type="button"],
+a.button {
+    min-height: 44px; /* Minimum touch target size */
+    min-width: 44px;
+    padding: 12px 24px;
+    font-size: 18px; /* Larger font for readability */
+}
+
+/* High contrast for visually impaired */
+.high-contrast {
+    background: #000 !important;
+    color: #fff !important;
+}
+
+.high-contrast a {
+    color: #00ffff !important;
+    text-decoration: underline !important;
+}
+
+/* Simple layout for 2G/3G networks */
+.container {
+    max-width: 100%;
+    padding: 10px;
+    margin: 0 auto;
+}
+
+/* Offline functionality */
+.offline-warning {
+    background: #ffcc00;
+    color: #000;
+    padding: 10px;
+    text-align: center;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Print styles for people without digital access */
+@media print {
+    .no-print {
+        display: none !important;
+    }
+    
+    body {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+    
+    a::after {
+        content: " (" attr(href) ")";
+    }
+}
+
+/* Voice command indicator */
+.voice-active {
+    border: 3px solid #4CAF50 !important;
+    animation: pulse-voice 1s infinite;
+}
+
+@keyframes pulse-voice {
+    0% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(76, 175, 80, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(76, 175, 80, 0); }
+}
+
+/* Emergency mode */
+.emergency-mode {
+    background: #ff0000 !important;
+    color: #ffffff !important;
+    animation: emergency-pulse 0.5s infinite;
+}
+
+@keyframes emergency-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Simple grid for basic phones */
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: -5px;
+}
+
+.col {
+    flex: 1;
+    padding: 5px;
+    min-width: 100%; /* Stack on very small screens */
+}
+
+@media (min-width: 480px) {
+    .col {
+        min-width: 50%; /* 2 columns on small phones */
+    }
+}
+
+@media (min-width: 768px) {
+    .col {
+        min-width: 33.33%; /* 3 columns on tablets */
+    }
+}
+
+/* Text-to-speech controls */
+.tts-controls {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.tts-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Simplified forms for low-literacy users */
+.simple-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.simple-form input,
+.simple-form select,
+.simple-form textarea {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.simple-form .required::after {
+    content: " *";
+    color: #ff0000;
+}
+
+/* Icon-based navigation for non-readers */
+.icon-nav {
+    display: flex;
+    justify-content: space-around;
+    background: white;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.icon-nav-item {
+    text-align: center;
+    font-size: 12px;
+}
+
+.icon-nav-item i {
+    font-size: 24px;
+    display: block;
+    margin-bottom: 5px;
+}

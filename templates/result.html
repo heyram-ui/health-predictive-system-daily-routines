@@ -1,12 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Result</title>
+    <title>Results - HealthPredict</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <h1>Your BMI Result</h1>
-    <p>Your BMI is: {{ bmi }}</p>
-    <a href="{{ url_for('index') }}">Back to Home</a>
+    <nav class="navbar navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">🏥 HealthPredict Pro</a>
+        </div>
+    </nav>
+    
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <h2 class="text-center mb-4">Health Prediction Results</h2>
+                        
+                        <div class="alert 
+                            {% if 'High Risk' in prediction %}alert-danger
+                            {% elif 'Medium Risk' in prediction %}alert-warning
+                            {% else %}alert-success{% endif %}">
+                            <h4 class="alert-heading">{{ prediction }}</h4>
+                        </div>
+                        
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5>Your Metrics</h5>
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item">Sleep: {{ sleep_hours }} hours</li>
+                                            <li class="list-group-item">Steps: {{ steps }}</li>
+                                            <li class="list-group-item">Health Score: {{ health_score }}/100</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5>Recommendations</h5>
+                                        <ul>
+                                            {% if sleep_hours < 7 %}
+                                            <li>Aim for 7-9 hours of sleep</li>
+                                            {% endif %}
+                                            {% if steps < 5000 %}
+                                            <li>Increase daily steps to 7,000-10,000</li>
+                                            {% endif %}
+                                            <li>Drink at least 2L of water daily</li>
+                                            <li>Take regular breaks from screens</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 text-center">
+                            <a href="/dashboard" class="btn btn-primary">Go to Dashboard</a>
+                            <a href="/predict" class="btn btn-outline-primary">New Prediction</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

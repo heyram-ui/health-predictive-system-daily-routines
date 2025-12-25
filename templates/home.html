@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row align-items-center min-vh-75">
+    <div class="col-lg-6 animate-in">
+        <h1 class="display-3 fw-bold text-white-shadow mb-4">
+            Predict Health Risks <br>
+            <span style="color: var(--accent);">Before They Happen</span>
+        </h1>
+        <p class="lead text-white mb-5" style="border-left: 4px solid var(--accent); padding-left: 20px;">
+            Advanced Machine Learning analysis of your daily routines to predict 6+ major diseases.
+            Follow WHO standards and get personalized life-saving recommendations.
+        </p>
+        <div class="d-flex gap-3">
+            <a href="/register" class="btn btn-glass btn-lg px-5">Get Started <i
+                    class="fas fa-arrow-right ms-2"></i></a>
+            <a href="/about" class="btn btn-glass btn-lg">Learn More</a>
+        </div>
+    </div>
+    <div class="col-lg-6 animate-in" style="animation-delay: 0.2s;">
+        <div class="glass-card text-center p-5">
+            <i class="fas fa-heart-pulse fa-5x mb-4" style="color: var(--danger);"></i>
+            <h3 class="mb-3">Real-time Analysis</h3>
+            <p>Our algorithms process your vitals and habits instantly to give you a comprehensive health score.</p>
+            <div class="row mt-4">
+                <div class="col-4">
+                    <i class="fas fa-brain fa-2x mb-2 text-primary"></i>
+                    <p class="small">Mental</p>
+                </div>
+                <div class="col-4">
+                    <i class="fas fa-lungs fa-2x mb-2 text-info"></i>
+                    <p class="small">Physical</p>
+                </div>
+                <div class="col-4">
+                    <i class="fas fa-bed fa-2x mb-2 text-warning"></i>
+                    <p class="small">Sleep</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="row g-4 mt-5">
+    <div class="col-md-4 animate-in" style="animation-delay: 0.4s;">
+        <div class="glass-card h-100 text-center">
+            <div class="rounded-circle bg-white d-inline-flex p-3 mb-3 text-primary">
+                <i class="fas fa-chart-pie fa-2x"></i>
+            </div>
+            <h4>Pre-Diagnosis</h4>
+            <p>Identify risks for Diabetes, Hypertension, and Heart Disease early.</p>
+        </div>
+    </div>
+    <div class="col-md-4 animate-in" style="animation-delay: 0.6s;">
+        <div class="glass-card h-100 text-center">
+            <div class="rounded-circle bg-white d-inline-flex p-3 mb-3 text-success">
+                <i class="fas fa-apple-alt fa-2x"></i>
+            </div>
+            <h4>WHO Guidelines</h4>
+            <p>Diet and exercise plans strictly based on World Health Organization standards.</p>
+        </div>
+    </div>
+    <div class="col-md-4 animate-in" style="animation-delay: 0.8s;">
+        <div class="glass-card h-100 text-center">
+            <div class="rounded-circle bg-white d-inline-flex p-3 mb-3 text-warning">
+                <i class="fas fa-exclamation-triangle fa-2x"></i>
+            </div>
+            <h4>Emergency Protocol</h4>
+            <p>Instant alerts and hospital admission suggestions for high-risk profiles.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

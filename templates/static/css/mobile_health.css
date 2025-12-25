@@ -1,0 +1,18 @@
+/* mobile_health.css */
+@media (max-width: 768px) {
+    .health-metric {
+        font-size: 1.5rem;
+    }
+    
+    .quick-action-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+    
+    .health-timeline {
+        scroll-snap-type: x mandatory;
+        overflow-x: auto;
+    }
+}
